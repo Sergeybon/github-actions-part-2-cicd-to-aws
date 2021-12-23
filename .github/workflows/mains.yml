@@ -2,7 +2,7 @@
 
 name: CI-CD-sbondar
 env:
-  SB-bucket       : "sbondar05-github-actions"
+  SB-bucket       : "elasticbeanstalk-eu-north-1-323957640402"
   SB-app          : "sbondar05"
   SB-env          : "Sbondar05-env"
   SB-deploy       : "SB-app_${{ github.sha }}.zip"
