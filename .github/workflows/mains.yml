@@ -45,3 +45,31 @@ jobs:
         run:
           echo "CI part finished"
           #echo test, and deploy your project.
+    cd-part:
+    # The type of runner that the job will run on
+      runs-on: ubuntu-latest
+      needs: [ci-part]
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+      steps:
+      - name: AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id     : ${{ secrets.SB_AWS_ACCESS_KEY }}
+          aws-secret-access-key : ${{ secrets.SB_AWS_SECRET_KEY }}
+          aws-region        : ${{ env.SB-AWS-region }}
+          
+      - name: create EBA
+        run: |
+          aws elasticbeanstalk create-application-version \
+          --application-name ${{ env.SB-app }} \
+          --source-bundle S3Bucket="${{ env.SB-bucket }}",S3Key="${{ env.SB-deploy }}" \
+          --version-label "Ver-${{ github.sha }}" \
+          --description "CommitSHA-${{ github.sha }}"
+          
+      - name: Deploy EBA
+        run : aws elasticbeanstalk update-environment --environment-name ${{ env.SB-env }} --version-label "Ver-${{ github.sha }}"
+        
+      - name: message
+        run:
+          echo "CD part finished"
