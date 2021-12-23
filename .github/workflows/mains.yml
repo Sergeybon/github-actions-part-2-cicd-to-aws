@@ -35,7 +35,7 @@ jobs:
         with:
           aws-access-key-id : ${{ secrets.SB_AWS_ACCESS_KEY }}
           aws-secret-key-id : ${{ secrets.SB_AWS_SECRET_KEY }}
-          aws-region        : ${{ SB-AWS-region }}
+          aws-region        : ${{ env.SB-AWS-region }}
           
       - name: copy deployment to S3
         run: aws s3 cp ${{ env.SB-deploy }} s3:// ${{ env.SB-bucket }}/
